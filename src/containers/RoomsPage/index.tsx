@@ -1,23 +1,44 @@
 import React from 'react';
-import { connect } from 'react-redux'
-import { Container, Row, Card, CardBody, CardTitle, Button, Col } from 'reactstrap';
+import { connect } from 'react-redux';
+import { Container, Row,  Button, Input} from 'reactstrap';
 import SingleRoom from '../../components/SingleRoom';
-import { RoomReducerState, Room } from '../../reducers/roomReducer';
-import { addRoom } from '../../actions/roomActions'
+import {RoomReducerState, Room } from '../../reducers/roomReducer';
+import { addRoomAction } from '../../actions/roomActions';
+import { Dispatch} from 'redux';
 
-interface RoomsPageProps {
-  rooms: Room[];
-  addRoom: () => void;
+interface StateProps {
+    rooms: Room[];
 }
 
-export class RoomsPage extends React.Component<RoomsPageProps> {
-  public addRoom = () => {
-    this.props.addRoom();
-  }
+interface DispatchProps {
+    addRoom: (name: string) => void;
+}
+
+interface State {
+    roomName: string;
+}
+
+type Props = StateProps & DispatchProps;
+
+export class RoomsPage extends React.Component<Props, State> {
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            roomName: 'test',
+        };
+    }
+
   public render() {
     return (
       <Container>
-        <Button style={{marginBottom: 20}} onClick={this.addRoom}>Dodaj pokoj</Button>
+        <Button style={{marginBottom: 20}} onClick={() => this.props.addRoom(this.state.roomName)}>Dodaj pokoj</Button>
+        <Input
+            type='text'
+            name='roomName'
+            id='roomName'
+            placeholder='type a room name'
+            onChange={(e) => this.setState( {roomName : e.target.value})}
+        />
         <Row>
           {this.props.rooms.map((item) => {
             return (
@@ -31,29 +52,17 @@ export class RoomsPage extends React.Component<RoomsPageProps> {
 }
 
 export interface ReducerState {
-  roomReducer: RoomReducerState
+  roomReducer: RoomReducerState;
 }
 
-const mapStateToProps = (state: ReducerState) => {
-  return ({
-    rooms: state.roomReducer.rooms
-  })
-}
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
+    addRoom: (name: string) => dispatch(addRoomAction(name)),
+});
 
-const mapDispatchToProps = {
-  addRoom,
+const mapStateToProps = (state: ReducerState): StateProps => {
+  return({
+      rooms: state.roomReducer.rooms,
+  });
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomsPage);
-
-
-
-
-
-
-
-
-
-
-
-

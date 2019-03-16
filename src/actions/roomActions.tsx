@@ -1,7 +1,7 @@
 
-export const addRoom = () => {
+export const addRoomAction = (name: string) => {
   return ({
-    payload: {},
+    payload: name,
     type: 'ADD_ROOM',
   });
 };

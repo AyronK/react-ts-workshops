@@ -8,6 +8,5 @@ const testReducer = (state = 'test', action: any) => {
 
 export default combineReducers({
   testReducer,
-  // roomReducer: roomReducer
   roomReducer,
 });
